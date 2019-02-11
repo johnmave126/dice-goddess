@@ -23,12 +23,8 @@ let defaultConfig = {|{
 }
 |};
 
-let config = "config.json"
-  |> Node.Fs.readFileAsUtf8Sync
-  |> result => {
-    switch (result) {
-    | value => value
-    | exception Js.Exn.Error(e) => {
+let config = try(Node.Fs.readFileAsUtf8Sync("config.json")) {
+    | Js.Exn.Error(e) => {
         switch(toSystemError(e)->codeGet) {
           | Some("ENOENT") => {
             logDebug("Cannot find config file", None);
@@ -40,14 +36,13 @@ let config = "config.json"
         };
         defaultConfig
       }
-    }
   }
-  |> Json.parseOrRaise
+  |> Json.parse
   |> result => {
     switch (result) {
-      | value => value
-      | exception Json.ParseError(message) => {
-        logWarn("Fail to parse config file", Some(message));
+      | Some(value) => value
+      | None => {
+        logWarn("Fail to parse config file", None);
         defaultConfig->Json.parseOrRaise
       }
     }
