@@ -1,0 +1,28 @@
+{
+    ".or": [
+    {
+        "post_type": "message",
+        ".or": [
+        {
+            "message_type": {
+                ".regex": "group|discuss"
+            },
+            "raw_message": {
+                ".regex": "^\\s*s?([1-9]\\d*\\*)?([1-9]\\d*)?d([1-9]|[1-9][0-9]|100)?\\s*$"
+            }
+        },
+        {
+            "message_type": "private",
+            "raw_message": {
+                ".regex": "^\\s*([1-9]\\d*\\*)?([1-9]\\d*)?d([1-9]|[1-9][0-9]|100)?\\s*$"
+            }
+        }
+        ]
+    },
+    {
+        "post_type": "request",
+        "request_type": "group",
+        "sub_type": "invite"
+    }
+    ]
+}
