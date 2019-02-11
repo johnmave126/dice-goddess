@@ -160,7 +160,10 @@ qqbot
   logInfo({j|[$wsType] Connected after $attempts attempts|j}, None)
 }))
 ->on(`socketFailed((wsType, attempts) => {
-  logError({j|[$wsType] Failed to connect after $attempts attempts|j}, None)
+  switch(attempts > 10) {
+    | true => Node.Process.exit(255)
+    | false => logError({j|[$wsType] Failed to connect after $attempts attempts|j}, None)
+  }
 }))
 ->on(`socketClose((wsType, code, desc) => {
   logWarn({j|[$wsType] Connection closed: $code - $desc|j}, None)
