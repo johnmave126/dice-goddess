@@ -115,7 +115,7 @@ let handleGroupAtMe = (e, context) => {
   |> String.trim
   |> m => switch(Js.String.length(m)) {
     | 0 => Some({js|哈？找我干嘛|js})
-    | x when x > 0 && x < 8 => Some({js|$(m)还行|js})
+    | x when x > 0 && x < 8 => Some(m ++ {js|还行|js})
     | _ => Some({js|太长不看|js})
   }
 };
