@@ -7,6 +7,8 @@ type socketOption = {
 };
 
 type event;
+[@bs.send] external stopPropagation: event => unit = "";
+
 type socket;
 
 module MessageRequest {
@@ -48,6 +50,8 @@ external on : (
 
       | [@bs.as "message.group"] `messageGroup((event, MessageRequest.content) => messageHandlerReturn)
       | [@bs.as "message.discuss"] `messageDiscuss((event, MessageRequest.content) => messageHandlerReturn)
+      | [@bs.as "message.group.@.me"] `messageGroupAtMe((event, MessageRequest.content) => messageHandlerReturn)
+      | [@bs.as "message.discuss.@.me"] `messageDiscussAtMe((event, MessageRequest.content) => messageHandlerReturn)
       | [@bs.as "message.private"] `messagePrivate((event, MessageRequest.content) => messageHandlerReturn)
 
       | [@bs.as "request.group.invite"] `requestGroupInvite(GroupInviteRequest.content => unit)

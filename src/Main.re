@@ -63,7 +63,7 @@ let parseMessage = (group, message) => {
 };
 
 let handleGroup = (_, context) => {
- open MessageRequest;
+  open MessageRequest;
   module GroupDiceRequestGroup {
     let template = [%bs.re "/^\s*(?<isSecret>s?)((?<numTimes>[1-9]\d*)\*)?(?<numDices>([1-9]\d*)?)d(?<numFaces>([1-9]|[1-9][0-9]|100)?)\s*$/"];
     [@bs.deriving abstract]
@@ -106,7 +106,19 @@ let handleGroup = (_, context) => {
   }
 };
 
-
+let handleGroupAtMe = (e, context) => {
+  open MessageRequest;
+  stopPropagation(e);
+  let stripCQ = [%bs.re "/\[[^\]]+\]/g"];
+  context->raw_messageGet
+  |> Js.String.replaceByRe(stripCQ, "")
+  |> String.trim
+  |> m => switch(Js.String.length(m)) {
+    | 0 => Some({js|哈？找我干嘛|js})
+    | x when x > 0 && x < 8 => Some({js|$m还行|js})
+    | _ => Some({js|太长不看|js})
+  }
+};
 
 let handlePrivate = (_, context) => {
   open MessageRequest;
@@ -178,6 +190,8 @@ qqbot
 
 ->on(`messageGroup(handleGroup))
 ->on(`messageDiscuss(handleGroup))
+->on(`messageGroupAtMe(handleGroupAtMe))
+->on(`messageDiscussAtMe(handleGroupAtMe))
 
 ->on(`messagePrivate(handlePrivate))
 
