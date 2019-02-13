@@ -109,14 +109,22 @@ let handleGroup = (_, context) => {
 let handleGroupAtMe = (e, context) => {
   open MessageRequest;
   stopPropagation(e);
-  let stripCQ = [%bs.re "/\[[^\]]+\]/g"];
+  let stripCQ = [%bs.re "/\[CQ:at[^\]]+\]/g"];
   context->raw_messageGet
   |> Js.String.replaceByRe(stripCQ, "")
   |> String.trim
   |> m => switch(Js.String.length(m)) {
-    | 0 => Some({js|哈？找我干嘛|js})
-    | x when x > 0 && x < 8 => Some(m ++ {js|还行|js})
-    | _ => Some({js|太长不看|js})
+    | 0 => Some("[CQ:emoji,id=128587]")
+    | x when x > 0 && x < 8 => {
+        let rd = Random.cryptoDice(1, 3);
+        switch(rd) {
+          | [1] => Some(m ++ {js|可还行|js})
+          | [2] => Some("那怎么办呀")
+          | [3] => Some("QAQ")
+          | _ => None
+        }
+    }
+    | _ => Some({js|喵呜，人家看不懂啦|js})
   }
 };
 

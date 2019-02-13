@@ -86,4 +86,4 @@ external call : (
     ]
   ) => unit = "__call__";
 
-[@bs.send] external connect : (bot) => unit = "";
+[@bs.send] external connect : bot => unit = "";
