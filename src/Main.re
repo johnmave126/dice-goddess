@@ -119,7 +119,7 @@ let handleGroupAtMe = (e, context) => {
         let rd = Random.cryptoDice(1, 3);
         switch(rd) {
           | [1] => Some(m ++ {js|可还行|js})
-          | [2] => Some("那怎么办呀")
+          | [2] => Some({js|那怎么办呀|js})
           | [3] => Some("QAQ")
           | _ => None
         }
